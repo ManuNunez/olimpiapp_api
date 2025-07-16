@@ -1,0 +1,145 @@
+# Laravel specific
+/vendor/
+/node_modules/
+/public/build/
+/public/hot/
+/public/storage/
+/storage/*.key
+/storage/pail/
+
+# Environment files (NEVER commit these)
+.env
+.env.*
+!.env.example
+.env.backup
+.env.production
+.env.local
+.env.testing
+.env.staging
+.env.development
+
+# Laravel logs
+storage/logs/*.log
+*.log
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+database/*.sqlite
+database/*.sqlite3
+database/*.db
+
+# Authentication & Security
+/auth.json
+oauth-*.json
+*.key
+*.pem
+*.p12
+*.jks
+*.keystore
+*.crt
+*.cert
+*.pfx
+
+# IDE & Editor files
+/.idea/
+/.vscode/
+/.fleet/
+/.nova/
+/.zed/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# PHP specific
+.phpactor.json
+.phpunit.result.cache
+/.phpunit.cache
+composer.phar
+
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+
+# Homestead
+Homestead.json
+Homestead.yaml
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+
+# Compiled assets
+/public/js/
+/public/css/
+/public/mix-manifest.json
+
+# Cache
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitignore
+
+# Session files
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+
+# Cache files
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+!/storage/framework/cache/data/.gitignore
+
+# View cache
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+
+# Testing
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+
+# Sensitive configuration files
+auth.json
+*.pem
+*.p12
+*.jks
+*.keystore
+
+# Additional security patterns
+*password*
+*secret*
+*private*
+*confidential*
+*.credentials
+
+# Never commit these common sensitive files
+aws-credentials
+.aws/
+gcp-credentials.json
+.gcp/
+azure-credentials
+.azure/
+
+# Docker sensitive files
+.dockerignore
+docker-compose.override.yml
+
+# Terraform (if used)
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform/
+
+# Kubernetes secrets (if used)
+*secret*.yaml
+*secret*.yml
