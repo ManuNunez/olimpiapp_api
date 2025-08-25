@@ -18,6 +18,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
     Route::get('/user', [App\Http\Controllers\AuthController::class, 'user']);
 });
+Route::middleware(['auth:sanctum', 'student'])->group(function () {
+    Route::controller(App\Http\Controllers\StudentController::class)->group(function () {
+        Route::get('/user/students', 'GetStudents');
+    });
+});
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(App\Http\Controllers\admin_panel\CampusController::class)->group(function () {
         Route::post('/campus/create', 'CreateCampus');
