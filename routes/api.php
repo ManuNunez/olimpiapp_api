@@ -1,15 +1,20 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\admin_panel\CampusController;
+use App\Http\Controllers\helpers\SchoolsHelperController;
 
 // Rutas públicas (sin auth)
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
+});
+
+// Rutas helpers públicas
+Route::controller(SchoolsHelperController::class)->group(function () {
+    Route::get('/schools/closest', 'getClosestSchool');
 });
 
 // Rutas protegidas por token
