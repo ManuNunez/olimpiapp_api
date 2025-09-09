@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -17,13 +18,10 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(SchoolsHelperController::class)->group(function () {
     // Ruta existente - buscar 6 escuelas más cercanas
     Route::get('/schools/closest', 'getClosestSchool');
-    
     // Nueva ruta - obtener escuela por CCT (usando query parameter)
     Route::get('/schools/by-cct', 'getSchoolByCct');
-    
     // Nueva ruta - obtener escuela por CCT (usando parámetro de ruta)
     Route::get('/schools/cct/{cct}', 'getSchoolByCctParam');
-    
     // Nueva ruta - buscar escuelas por CCT parcial
     Route::get('/schools/search-cct', 'searchSchoolsByCct');
 });
@@ -40,14 +38,30 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/users/check-role', 'checkUserHasRole');
         Route::get('/users/{userId}/roles/{roleId}/check', 'checkUserHasRoleByParams');
     });
-    
-    // Estudiantes (con middleware extra "student")
+
+    // NUEVAS RUTAS PARA STUDENT MANAGEMENT
+    Route::controller(StudentController::class)->group(function () {
+        // Obtener estudiante del usuario autenticado
+        Route::get('/student/profile', 'getStudentByUser');
+        
+        // Crear nuevo perfil de estudiante
+        Route::post('/student/profile', 'createStudent');
+        
+        // Actualizar perfil de estudiante existente
+        Route::put('/student/profile', 'updateStudent');
+        Route::patch('/student/profile', 'updateStudent');
+        
+        // Ruta combinada que maneja toda la lógica (opcional)
+        Route::match(['GET', 'POST', 'PUT', 'PATCH'], '/student/handle', 'handleStudent');
+    });
+
+    // Estudiantes (con middleware extra "student") - RUTAS EXISTENTES
     Route::middleware('student')->group(function () {
         Route::controller(StudentController::class)->group(function () {
             Route::get('/user/students', 'GetStudents');
         });
     });
-    
+
     // Campus (admin panel)
     Route::controller(CampusController::class)->group(function () {
         Route::post('/campus/create', 'CreateCampus');
