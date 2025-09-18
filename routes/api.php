@@ -6,7 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\admin_panel\CampusController;
 use App\Http\Controllers\helpers\SchoolsHelperController;
-use App\Http\Controllers\UserRoleController; // Agregar esta línea
+use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\UserController; // Importar UserController
 
 // Rutas públicas (sin auth)
 Route::controller(AuthController::class)->group(function () {
@@ -37,6 +38,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users/{userId}/roles', 'getUserRoles');
         Route::post('/users/check-role', 'checkUserHasRole');
         Route::get('/users/{userId}/roles/{roleId}/check', 'checkUserHasRoleByParams');
+    });
+
+    // NUEVAS RUTAS PARA USER MANAGEMENT
+    Route::controller(UserController::class)->group(function () {
+        Route::put('/users/{id}', 'update');     // Actualizar usuario
+        Route::delete('/users/{id}', 'destroy'); // Desactivar usuario
+        Route::patch('/users/{id}/restore', 'restore'); // Reactivar usuario
     });
 
     // NUEVAS RUTAS PARA STUDENT MANAGEMENT
