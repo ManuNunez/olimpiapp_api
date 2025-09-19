@@ -71,12 +71,16 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Campus (admin panel)
-    Route::controller(CampusController::class)->group(function () {
-        Route::post('/campus/create', 'CreateCampus');
-        Route::put('/campus/update/{id}', 'UpdateCampus');
-        Route::delete('/campus/delete/{id}', 'DeleteCampus');
-        Route::get('/campus/list', 'ListCampuses');
-        Route::get('/campus/{id}', 'GetCampus');
-        Route::get('/campus/search', 'SearchCampuses');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('campus')->group(function () {
+        Route::get('/', [CampusController::class, 'ListCampuses']);   // GET api/campuses
+        Route::get('/{id}', [CampusController::class, 'GetCampus']);  // GET api/campuses/1
+        Route::post('/create', [CampusController::class, 'CreateCampus']);  // POST api/campuses
+        Route::put('/update/{id}', [CampusController::class, 'UpdateCampus']); // PUT api/campuses/1
+        Route::delete('/{id}', [CampusController::class, 'DeleteCampus']); // DELETE api/campuses/1
+        Route::post('/search', [CampusController::class, 'SearchCampuses']); // POST api/campuses/search
     });
+});
+
 });

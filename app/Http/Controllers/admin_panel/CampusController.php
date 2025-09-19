@@ -8,10 +8,8 @@ use Illuminate\Http\Request;
 
 class CampusController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth:sanctum', 'admin']);
-    }
+   
+
     public function CreateCampus(Request $request)
     {
         // Validate the request data
