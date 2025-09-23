@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -7,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -120,5 +123,89 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         return response()->json(Auth::user());
+    }
+
+    /**
+     * Update the authenticated user's profile
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario no autenticado'
+                ], 401);
+            }
+
+            // Validaciones
+            $rules = [
+                'name' => 'sometimes|required|string|max:255',
+                'username' => [
+                    'sometimes',
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('users')->ignore($user->id)
+                ],
+                'email' => [
+                    'sometimes',
+                    'required',
+                    'email',
+                    'max:255',
+                    Rule::unique('users')->ignore($user->id)
+                ],
+                'date_of_birth' => 'sometimes|nullable|date',
+                'curp' => [
+                    'sometimes',
+                    'nullable',
+                    'string',
+                    'size:18',
+                    Rule::unique('users')->ignore($user->id)
+                ],
+                'phone' => 'sometimes|nullable|string|max:20',
+                'address' => 'sometimes|nullable|string|max:500',
+                'bio' => 'sometimes|nullable|string|max:1000',
+                'gender' => 'sometimes|nullable|string|in:masculino,femenino,otro',
+                'occupation' => 'sometimes|nullable|string|max:255',
+                'website' => 'sometimes|nullable|url|max:255',
+            ];
+
+            $validatedData = $request->validate($rules);
+
+            // Actualizar solo los campos presentes en la request
+            $updateData = collect($validatedData)->filter(function ($value, $key) {
+                return $key !== 'password'; // Asegurar que no se actualice la contraseña accidentalmente
+            })->toArray();
+
+            $user->update($updateData);
+
+            // Recargar el usuario para obtener los datos actualizados
+            $user->refresh();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Perfil actualizado correctamente',
+                'data' => $user
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el perfil',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

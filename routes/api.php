@@ -30,9 +30,17 @@ Route::controller(SchoolsHelperController::class)->group(function () {
 // Rutas protegidas por token
 Route::middleware('auth:sanctum')->group(function () {
     // Autenticación
+    // Autenticación
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']); // en tu controlador el método se llama me()
-    
+    Route::get('/me', [AuthController::class, 'me']);
+
+    // ¡AGREGAR ESTAS LÍNEAS!
+    Route::put('/me', [AuthController::class, 'updateProfile']);
+    Route::patch('/me', [AuthController::class, 'updateProfile']);
+    // ¡NUEVA RUTA! - Actualizar perfil del usuario autenticado
+    Route::put('/me', [AuthController::class, 'updateProfile']); // Esta es la que faltaba
+    Route::patch('/me', [AuthController::class, 'updateProfile']); // También para PATCH si prefieres
+
     // User Roles - Rutas protegidas
     Route::controller(UserRoleController::class)->group(function () {
         Route::get('/users/{userId}/roles', 'getUserRoles');
@@ -42,23 +50,22 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // NUEVAS RUTAS PARA USER MANAGEMENT
     Route::controller(UserController::class)->group(function () {
-        Route::put('/users/{id}', 'update');     // Actualizar usuario
-        Route::delete('/users/{id}', 'destroy'); // Desactivar usuario
-        Route::patch('/users/{id}/restore', 'restore'); // Reactivar usuario
+        Route::get('/users', 'index');
+        Route::get('/users/{id}', 'show');
+        Route::put('/users/{id}', 'update');
+        Route::delete('/users/{id}', 'destroy');
+        Route::patch('/users/{id}/restore', 'restore');
     });
 
     // NUEVAS RUTAS PARA STUDENT MANAGEMENT
     Route::controller(StudentController::class)->group(function () {
         // Obtener estudiante del usuario autenticado
         Route::get('/student/profile', 'getStudentByUser');
-        
         // Crear nuevo perfil de estudiante
         Route::post('/student/profile', 'createStudent');
-        
         // Actualizar perfil de estudiante existente
         Route::put('/student/profile', 'updateStudent');
         Route::patch('/student/profile', 'updateStudent');
-        
         // Ruta combinada que maneja toda la lógica (opcional)
         Route::match(['GET', 'POST', 'PUT', 'PATCH'], '/student/handle', 'handleStudent');
     });
@@ -71,16 +78,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Campus (admin panel)
-
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::prefix('campus')->group(function () {
-        Route::get('/', [CampusController::class, 'ListCampuses']);   // GET api/campuses
-        Route::get('/{id}', [CampusController::class, 'GetCampus']);  // GET api/campuses/1
-        Route::post('/create', [CampusController::class, 'CreateCampus']);  // POST api/campuses
-        Route::put('/update/{id}', [CampusController::class, 'UpdateCampus']); // PUT api/campuses/1
-        Route::delete('/{id}', [CampusController::class, 'DeleteCampus']); // DELETE api/campuses/1
-        Route::post('/search', [CampusController::class, 'SearchCampuses']); // POST api/campuses/search
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::prefix('campus')->group(function () {
+            Route::get('/', [CampusController::class, 'ListCampuses']); // GET api/campuses
+            Route::get('/{id}', [CampusController::class, 'GetCampus']); // GET api/campuses/1
+            Route::post('/create', [CampusController::class, 'CreateCampus']); // POST api/campuses
+            Route::put('/update/{id}', [CampusController::class, 'UpdateCampus']); // PUT api/campuses/1
+            Route::delete('/{id}', [CampusController::class, 'DeleteCampus']); // DELETE api/campuses/1
+            Route::post('/search', [CampusController::class, 'SearchCampuses']); // POST api/campuses/search
+        });
     });
-});
-
 });
