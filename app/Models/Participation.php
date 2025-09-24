@@ -34,14 +34,19 @@ class Participation extends Model
 		'student_id' => 'int',
 		'contest_id' => 'int',
 		'classroom_id' => 'int',
-		'score' => 'float'
+		'score' => 'float',
+		'level' => 'int',
+		'campus_id' => 'int',
 	];
 
 	protected $fillable = [
 		'student_id',
 		'contest_id',
 		'classroom_id',
-		'score'
+		'score',
+		'level',                     // agregado al fillable
+		'participation_code',
+		'campus_id',
 	];
 
 	public function student()
@@ -62,5 +67,9 @@ class Participation extends Model
 	public function participation_answers()
 	{
 		return $this->hasMany(ParticipationAnswer::class);
+	}
+	public function campus()
+	{
+		return $this->belongsTo(Campus::class);
 	}
 }

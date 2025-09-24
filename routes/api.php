@@ -9,6 +9,7 @@ use App\Http\Controllers\helpers\SchoolsHelperController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ContestController;
+use App\Http\Controllers\ParticipationController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
@@ -63,6 +64,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/users/{id}', 'destroy');
         Route::patch('/users/{id}/restore', 'restore');
     });
+    Route::post('/participations', [ParticipationController::class, 'store']);
+    Route::get('/participations/contest/{contestId}', [ParticipationController::class, 'getByContest']);
+    Route::get('/participations/contest/{contestId}/campus/{campusId}', [ParticipationController::class, 'getByContestAndCampus']);
+    Route::get('/participations/student/{studentId}', [ParticipationController::class, 'getByStudent']);
+    Route::get('/participations/check/{contestId}/student/{studentId}', [ParticipationController::class, 'isEnrolled']);
+    Route::put('/participations/{id}', [ParticipationController::class, 'update']);
+
 
     Route::controller(StudentController::class)->group(function () {
         Route::get('/student/profile', 'getStudentByUser');
