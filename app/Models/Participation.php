@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property Student|null $student
  * @property Contest|null $contest
- * @property ContestClassroom|null $contest_classroom
+ * @property Classroom|null $contest_classroom
  * @property Collection|ParticipationAnswer[] $participation_answers
  *
  * @package App\Models
@@ -61,7 +61,7 @@ class Participation extends Model
 
 	public function contest_classroom()
 	{
-		return $this->belongsTo(ContestClassroom::class, 'classroom_id');
+		return $this->belongsTo(Classroom::class, 'classroom_id');
 	}
 
 	public function participation_answers()
